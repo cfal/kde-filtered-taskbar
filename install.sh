@@ -23,7 +23,7 @@ mkdir -p "$HOME/.local/share/plasma/plasmoids"
 cp -r "$WIDGET_ID" "$WIDGET_DIR"
 
 echo "Restarting Plasma shell to load the widget..."
-plasmashell --replace &
+plasmashell --replace > /dev/null 2>&1 &
 
 echo "Installation complete!"
 echo ""

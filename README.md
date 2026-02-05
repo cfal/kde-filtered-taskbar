@@ -25,6 +25,7 @@ The goal is to provide a distraction-free taskbar that shows only the applicatio
 ### Quick Install (Recommended)
 
 ```bash
+chmod +x install.sh  # Make script executable (if needed)
 ./install.sh
 ```
 
