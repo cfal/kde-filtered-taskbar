@@ -27,8 +27,8 @@
       <default>true</default>
     </entry>
     <entry name="groupingStrategy" type="Enum">
-      <label>How tasks are grouped: 0 = Do Not Group, 1 = By Program Name</label>
-      <default>1</default>
+       <label>How tasks are grouped: 0 = Do Not Group, 1 = By Program Name</label>
+       <default>0</default>
     </entry>
     <entry name="groupedTaskVisualization" type="Enum">
       <label>What happens when clicking on a grouped task: 0 = cycle through grouped tasks, 1 = try to show tooltips, 2 = try to show present Windows effect, 3 = show textual list (AKA group dialog)</label>

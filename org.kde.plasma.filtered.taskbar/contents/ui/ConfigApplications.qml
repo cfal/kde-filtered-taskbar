@@ -99,6 +99,12 @@ KCMUtils.SimpleKCM {
             placeholderText: i18n("zeditor,kitty (no quotes needed)")
         }
 
+        QQC2.CheckBox {
+            Kirigami.FormData.label: i18n("Group tasks by program name:")
+            checked: cfg_groupingStrategy === 1
+            onCheckedChanged: cfg_groupingStrategy = checked ? 1 : 0
+        }
+
         QQC2.Label {
             text: i18n("Enter application IDs or names separated by commas. Leave empty to show all applications.\n\nDo not include quotes - just the app names or IDs.\n\nExamples:\n• 'zeditor,kitty' for specific editors\n• 'firefox,chromium' for web browsers\n• 'code,firefox,zed,kitty' for development apps")
             wrapMode: Text.WordWrap
