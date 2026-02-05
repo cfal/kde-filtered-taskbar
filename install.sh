@@ -22,17 +22,6 @@ mkdir -p "$HOME/.local/share/plasma/plasmoids"
 # Copy widget files
 cp -r "$WIDGET_ID" "$WIDGET_DIR"
 
-echo "Widget installed to $WIDGET_DIR"
-
-# Install with plasmoid tool
-if command -v plasmapkg2 &> /dev/null; then
-    echo "Registering widget with Plasma..."
-    plasmapkg2 -i "$WIDGET_ID" 2>/dev/null || true
-fi
-
-echo "Restarting Plasma shell..."
-plasmashell --replace &
-
 echo "Installation complete!"
 echo ""
 echo "To add the widget:"
