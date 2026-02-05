@@ -59,7 +59,6 @@
                 "Name": "André Klein"
             }
         ],
-        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=plasmashell&component=Task%20Manager%20and%20Icons-Only%20Task%20Manager%20widgets",
         "Category": "Windows and Tasks",
         "Comment": "Based on the KDE Plasma Task Manager by Eike Hein, heavily modified by André Klein to add application filtering",
         "Description": "A minimal, heavily modified version of the KDE Task Manager that filters applications to show only specified ones",
