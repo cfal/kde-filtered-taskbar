@@ -22,6 +22,9 @@ mkdir -p "$HOME/.local/share/plasma/plasmoids"
 # Copy widget files
 cp -r "$WIDGET_ID" "$WIDGET_DIR"
 
+echo "Restarting Plasma shell to load the widget..."
+plasmashell --replace &
+
 echo "Installation complete!"
 echo ""
 echo "To add the widget:"
