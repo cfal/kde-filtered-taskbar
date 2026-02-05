@@ -7,6 +7,13 @@ set -e
 WIDGET_ID="org.kde.plasma.filtered.taskbar"
 WIDGET_DIR="$HOME/.local/share/plasma/plasmoids/$WIDGET_ID"
 
+# Check if running from repository root
+if [ ! -d "$WIDGET_ID" ]; then
+    echo "Error: $WIDGET_ID directory not found."
+    echo "Please run this script from the repository root directory."
+    exit 1
+fi
+
 echo "Installing Filtered Taskbar widget..."
 
 # Create plasmoids directory if it doesn't exist
