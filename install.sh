@@ -29,7 +29,9 @@ fi
 cp -r "$WIDGET_ID" "$WIDGET_DIR"
 
 echo "Restarting Plasma shell to load the widget..."
-plasmashell --replace > /dev/null 2>&1 &
+kquitapp6 plasmashell && sleep 1 && kstart5 plasmashell > /dev/null 2>&1 &
+echo "Plasma shell is restarting... please wait a moment for it to complete."
+sleep 6
 
 echo "Installation complete!"
 echo ""
