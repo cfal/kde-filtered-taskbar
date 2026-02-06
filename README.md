@@ -24,10 +24,17 @@ The goal is to provide a distraction-free taskbar that shows only the applicatio
 
 ### Quick Install (Recommended)
 
-```bash
-chmod +x install.sh  # Make script executable (if needed)
-./install.sh
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/burninc0de/kde-filtered-taskbar.git
+   cd kde-filtered-taskbar
+   ```
+
+2. Run the installer:
+   ```bash
+   chmod +x install.sh  # Make script executable (if needed)
+   ./install.sh
+   ```
 
 This will automatically install the widget and restart Plasma.
 
