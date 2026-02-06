@@ -701,7 +701,7 @@ PlasmaCore.ToolTipArea {
             fill: parent
             leftMargin: taskFrame.margins.left + iconBox.width + LayoutMetrics.labelMargin
             topMargin: taskFrame.margins.top
-            rightMargin: taskFrame.margins.right + (audioStreamIcon !== null && audioStreamIcon.visible ? (audioStreamIcon.width + LayoutMetrics.labelMargin) : 0)
+            rightMargin: taskFrame.margins.right + (audioStreamIcon !== null && audioStreamIcon.visible ? (audioStreamIcon.width + LayoutMetrics.labelMargin) : 0) + (model.IsWindow && !inPopup ? (Kirigami.Units.iconSizes.smallMedium + Kirigami.Units.smallSpacing) : 0)
             bottomMargin: taskFrame.margins.bottom
         }
 
