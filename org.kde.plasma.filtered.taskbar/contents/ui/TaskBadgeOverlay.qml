@@ -26,7 +26,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: -offset
             y: root.shiftBadgeDown ? (icon.height / 2) : 0
-            visible: task.smartLauncherItem.countVisible
+            visible: task.smartLauncherItem ? task.smartLauncherItem.countVisible : false
             width: badgeRect.width + offset * 2
             height: badgeRect.height + offset * 2
             radius: badgeRect.radius + offset * 2
@@ -80,8 +80,8 @@ Item {
             return offset + (root.shiftBadgeDown ? (icon.height / 2) : 0);
         }
         height: Math.round(icon.paintedHeight * 0.45)
-        visible: task.smartLauncherItem.countVisible
-        number: task.smartLauncherItem.count
+        visible: task.smartLauncherItem ? task.smartLauncherItem.countVisible : false
+        number: task.smartLauncherItem ? task.smartLauncherItem.count : 0
 
         Behavior on y {
             NumberAnimation {

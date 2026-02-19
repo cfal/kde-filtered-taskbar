@@ -15,7 +15,7 @@ import org.kde.ksvg as KSvg
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.plasma.components as PlasmaComponents3
 import org.kde.kirigami as Kirigami
-import org.kde.plasma.private.taskmanager as TaskManagerApplet
+import org.kde.taskmanager as TaskManagerApplet
 import org.kde.plasma.plasmoid
 
 import "code/layoutmetrics.js" as LayoutMetrics
@@ -54,12 +54,14 @@ PlasmaCore.ToolTipArea {
     required property /*main.qml*/ Item tasksRoot
 
     readonly property int pid: model.AppPid
-    readonly property string appName: model.AppName
-    readonly property string appId: model.AppId.replace(/\.desktop/, '')
+    readonly property string appName: (model.AppName || "").toString()
+    readonly property string appId: ((model.AppId || "").toString()).replace(/\.desktop$/, "")
+    readonly property string launcherUrl: (model.LauncherUrlWithoutIcon || "").toString()
+    readonly property string filterConfig: (Plasmoid.configuration.allowedApplications || "").toString()
 
     function isApplicationAllowed() {
         // If no allowed applications are configured, show all
-        var config = Plasmoid.configuration.allowedApplications;
+        var config = filterConfig;
         if (!config || config.length === 0) {
             return true;
         }
@@ -82,6 +84,7 @@ PlasmaCore.ToolTipArea {
         // Check if this app matches any allowed app
         var currentAppId = appId ? appId.toLowerCase() : "";
         var currentAppName = appName ? appName.toLowerCase() : "";
+        var currentLauncherUrl = launcherUrl ? launcherUrl.toLowerCase() : "";
 
         for (var i = 0; i < allowedApps.length; i++) {
             var allowedApp = allowedApps[i];
@@ -90,7 +93,8 @@ PlasmaCore.ToolTipArea {
 
             if (trimmedApp === currentAppId ||
                 currentAppId.indexOf(trimmedApp) !== -1 ||
-                currentAppName.indexOf(trimmedApp.toLowerCase()) !== -1) {
+                currentAppName.indexOf(trimmedApp) !== -1 ||
+                currentLauncherUrl.indexOf(trimmedApp) !== -1) {
                 return true;
             }
         }
@@ -203,9 +207,9 @@ PlasmaCore.ToolTipArea {
         }
 
         var smartLauncherDescription = "";
-        if (iconBox.active) {
-            smartLauncherDescription += i18ncp("@info:tooltip", "There is %1 new message.", "There are %1 new messages.", task.smartLauncherItem.count);
-        }
+                if (iconBox.active) {
+                    smartLauncherDescription += i18ncp("@info:tooltip", "There is %1 new message.", "There are %1 new messages.", task.smartLauncherItem ? task.smartLauncherItem.count : 0);
+                }
 
         if (model.IsGroupParent) {
             switch (Plasmoid.configuration.groupedTaskVisualization) {
@@ -282,13 +286,13 @@ PlasmaCore.ToolTipArea {
 
     onSmartLauncherEnabledChanged: {
         if (smartLauncherEnabled && !smartLauncherItem) {
-            var component = Qt.createComponent("org.kde.plasma.private.taskmanager", "SmartLauncherItem");
-            var smartLauncher = component.createObject(task);
+            var component = Qt.createComponent("TaskManagerApplet/SmartLauncherItem.qml");
+            if (component.status === Component.Ready) {
+                var smartLauncher = component.createObject(task);
+                smartLauncher.launcherUrl = Qt.binding(function() { return model.LauncherUrlWithoutIcon; });
+                smartLauncherItem = smartLauncher;
+            }
             component.destroy();
-
-            smartLauncher.launcherUrl = Qt.binding(function() { return model.LauncherUrlWithoutIcon; });
-
-            smartLauncherItem = smartLauncher;
         }
     }
 
@@ -339,7 +343,9 @@ PlasmaCore.ToolTipArea {
     function showContextMenu(args: var): void {
         task.hideImmediately();
         contextMenu = tasksRoot.createContextMenu(task, modelIndex(), args);
-        contextMenu.show();
+        if (contextMenu && contextMenu.show) {
+            contextMenu.show();
+        }
     }
 
     function updateAudioStreams(args: var): void {
@@ -452,7 +458,7 @@ PlasmaCore.ToolTipArea {
         acceptedButtons: Qt.RightButton
         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad | PointerDevice.Stylus
         gesturePolicy: TapHandler.WithinBounds // Release grab when menu appears
-        onPressedChanged: if (pressed) contextMenuTimer.start()
+        onTapped: (eventPoint, button) => contextMenuTimer.start()
     }
 
     Timer {
@@ -464,13 +470,13 @@ PlasmaCore.ToolTipArea {
     TapHandler {
         id: leftTapHandler
         acceptedButtons: Qt.LeftButton
-        onTapped: (eventPoint, button) => leftClick()
+        onTapped: (eventPoint, button) => leftClick(eventPoint)
 
-        function leftClick(): void {
+        function leftClick(eventPoint): void {
             if (task.active) {
                 hideToolTip();
             }
-            TaskTools.activateTask(modelIndex(), model, point.modifiers, task, Plasmoid, tasksRoot, effectWatcher.registered);
+            TaskTools.activateTask(modelIndex(), model, eventPoint ? eventPoint.modifiers : Qt.NoModifier, task, Plasmoid, tasksRoot, effectWatcher.registered);
         }
     }
 
@@ -573,7 +579,7 @@ PlasmaCore.ToolTipArea {
 
         anchors.fill: frame
         asynchronous: true
-        active: task.smartLauncherItem && task.smartLauncherItem.progressVisible
+        active: (task.smartLauncherItem && task.smartLauncherItem.progressVisible) ? true : false
 
         source: "TaskProgressOverlay.qml"
     }
@@ -593,8 +599,7 @@ PlasmaCore.ToolTipArea {
                  - adjustMargin(false, parent.height, taskFrame.margins.bottom))
 
         asynchronous: true
-        active: height >= Kirigami.Units.iconSizes.small
-                && task.smartLauncherItem && task.smartLauncherItem.countVisible
+        active: (height >= Kirigami.Units.iconSizes.small) && ((task.smartLauncherItem && task.smartLauncherItem.countVisible) ? true : false)
         source: "TaskBadgeOverlay.qml"
 
         function adjustMargin(isVertical: bool, size: real, margin: real): real {
@@ -741,7 +746,7 @@ PlasmaCore.ToolTipArea {
         },
         State {
             name: "attention"
-            when: model.IsDemandingAttention || (task.smartLauncherItem && task.smartLauncherItem.urgent)
+                when: model.IsDemandingAttention || (task.smartLauncherItem && task.smartLauncherItem.urgent ? true : false)
 
             PropertyChanges {
                 target: frame

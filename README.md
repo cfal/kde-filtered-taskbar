@@ -44,6 +44,13 @@ This will automatically install the widget and restart Plasma.
 2. Run `plasmapkg2 -i org.kde.plasma.filtered.taskbar` or restart Plasma
 3. Add the "Filtered Taskbar" widget to your panel
 
+**Compatibility shim (KDE 6.6)**
+
+- Why: KDE Plasma 6.6 changed the layout of the task manager QML modules and removed/renamed some private QML types the widget relies on.
+- What we do: the installer will automatically detect whether your system provides the required private Task Manager QML module. If it does not, the installer writes a small compatibility shim into the installed plasmoid (under `contents/ui/TaskManagerApplet/`) that implements the minimal API the widget needs so users don't have to build or install additional system libraries.
+- Behavior: if the real system module is available, the installer will switch the installed QML to import it and remove the shim; otherwise the shim remains so the widget works out-of-the-box.
+- Safety: the shim is user-local (installed under `~/.local`) and does not change system files or require sudo.
+
 ## Features
 
 - **Tab-based interface**: Switch between application windows using tabs

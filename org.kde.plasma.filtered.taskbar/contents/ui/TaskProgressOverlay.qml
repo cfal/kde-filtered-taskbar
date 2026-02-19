@@ -19,7 +19,7 @@ T.ProgressBar {
     padding: 0
     from: 0
     to: 100
-    value: task.smartLauncherItem.progress
+    value: task.smartLauncherItem ? task.smartLauncherItem.progress : 0
     background: null
 
     contentItem: Item {

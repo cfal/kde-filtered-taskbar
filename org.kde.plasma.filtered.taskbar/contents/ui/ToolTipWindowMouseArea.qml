@@ -31,7 +31,10 @@ MouseArea {
             tasksModel.requestClose(modelIndex);
             break;
         case Qt.RightButton:
-            tasks.createContextMenu(rootTask, modelIndex).show();
+            const menu = tasks.createContextMenu(rootTask, modelIndex);
+            if (menu && menu.show) {
+                menu.show();
+            }
             break;
         }
     }
