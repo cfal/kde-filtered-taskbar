@@ -66,40 +66,49 @@ PlasmaCore.ToolTipArea {
             return true;
         }
 
+        // A leading '!' inverts the match: show all EXCEPT the listed apps
+        var inverted = false;
+        if (typeof config === 'string' && config.charAt(0) === '!') {
+            inverted = true;
+            config = config.substring(1);
+        }
+
         // Handle both StringList (array) and string formats
-        var allowedApps;
+        var filterApps;
         if (Array.isArray(config)) {
-            allowedApps = config;
+            filterApps = config;
         } else if (typeof config === 'string') {
-            allowedApps = config.split(',').map(function(app) { return app.trim(); }).filter(function(app) { return app.length > 0; });
+            filterApps = config.split(',').map(function(app) { return app.trim(); }).filter(function(app) { return app.length > 0; });
         } else {
             return true; // Unknown format, show all
         }
 
         // If no valid apps after parsing, show all
-        if (!allowedApps || allowedApps.length === 0) {
+        if (!filterApps || filterApps.length === 0) {
             return true;
         }
 
-        // Check if this app matches any allowed app
+        // Check if this app matches any listed app
         var currentAppId = appId ? appId.toLowerCase() : "";
         var currentAppName = appName ? appName.toLowerCase() : "";
         var currentLauncherUrl = launcherUrl ? launcherUrl.toLowerCase() : "";
 
-        for (var i = 0; i < allowedApps.length; i++) {
-            var allowedApp = allowedApps[i];
-            if (!allowedApp) continue;
-            var trimmedApp = allowedApp.toLowerCase();
+        var matched = false;
+        for (var i = 0; i < filterApps.length; i++) {
+            var filterApp = filterApps[i];
+            if (!filterApp) continue;
+            var trimmedApp = filterApp.toLowerCase();
 
             if (trimmedApp === currentAppId ||
                 currentAppId.indexOf(trimmedApp) !== -1 ||
                 currentAppName.indexOf(trimmedApp) !== -1 ||
                 currentLauncherUrl.indexOf(trimmedApp) !== -1) {
-                return true;
+                matched = true;
+                break;
             }
         }
 
-        return false;
+        return inverted ? !matched : matched;
     }
 
     // To achieve a bottom-to-top layout on vertical panels, the task manager

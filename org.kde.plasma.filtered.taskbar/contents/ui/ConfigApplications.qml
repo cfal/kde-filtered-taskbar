@@ -96,7 +96,7 @@ KCMUtils.SimpleKCM {
             id: applicationList
 
             Kirigami.FormData.label: i18n("Allowed Applications:")
-            placeholderText: i18n("zeditor,kitty (no quotes needed)")
+            placeholderText: i18n("zeditor,kitty  or  !firefox,chromium  (no quotes needed)")
         }
 
         QQC2.CheckBox {
@@ -106,7 +106,7 @@ KCMUtils.SimpleKCM {
         }
 
         QQC2.Label {
-            text: i18n("Enter application IDs or names separated by commas. Leave empty to show all applications.\n\nDo not include quotes - just the app names or IDs.\n\nExamples:\n• 'zeditor,kitty' for specific editors\n• 'firefox,chromium' for web browsers\n• 'code,firefox,zed,kitty' for development apps")
+            text: i18n("Enter application IDs or names separated by commas. Leave empty to show all applications.\n\nDo not include quotes - just the app names or IDs.\n\nPrefix the list with '!' to invert the filter: show all applications EXCEPT those listed.\n\nExamples:\n• 'zeditor,kitty' for specific editors\n• 'firefox,chromium' for web browsers\n• 'code,firefox,zed,kitty' for development apps\n• '!firefox,chromium' to hide browsers and show everything else\n• '!slack' to hide just Slack")
             wrapMode: Text.WordWrap
             font: Kirigami.Theme.smallFont
         }

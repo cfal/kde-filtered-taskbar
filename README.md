@@ -70,10 +70,13 @@ Right-click the widget → "Configure Filtered Taskbar" → "Applications" tab:
 
 - **Allowed Applications**: Enter application IDs or names separated by commas
 - **Leave empty** to show all applications (default behavior)
+- **Prefix the list with `!`** to invert the filter — show all applications EXCEPT those listed
 - **Examples**:
   - `code` - Show only VSCode
   - `firefox,chromium` - Show only web browsers
   - `code,firefox,zed,kitty` - Show development applications
+  - `!firefox,chromium` - Show everything except browsers
+  - `!slack` - Show everything except Slack
 
 ### Filtering Logic
 
